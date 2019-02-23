@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script type="css/stylesheet" >
+    body
+    {
+        background-color: #fcfcfc;
+    }
+    .center-div
+    {
+        position: absolute;
+        margin: auto;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        width: 100px;
+        height: 100px;
+        background-color: #ccc;
+        border-radius: 3px;
+    }
+</script>
+<script>
+
+
+// function test() {
+//         var xhr = new XMLHttpRequest();
+//         xhr.open('GET', "http://localhost:8000/helloserver", true);
+//         xhr.setRequestHeader("product-key", "dc");
+//         xhr.responseType = "blob";
+//         xhr.onreadystatechange = function() {
+//             if (xhr.readyState == 4) {
+//                 if (success) success(xhr.response);
+//             }
+//         };
+//         xhr.send(null);
+//     }
+
+$(document).ready(function(){
+  $(".lpsmbutton").click(function(){
+    $.ajax({
+            url: 'http://localhost:8000/helloserver',
+            type: 'GET',
+            beforeSend: function(xhr){xhr.setRequestHeader('X-Test-Header', 'test-value');},
+            beforeSend: function(request) {
+                request.setRequestHeader('product-key', 'lpsm');
+            },  
+            success: function (result) {
+                $("#servermsg").text(result);
+                // alert(result)
+                
+            }
+        });  
+
+  });
+})
+
+$(document).ready(function(){
+  $(".dcbutton").click(function(){
+    $.ajax({
+            url: 'http://localhost:8000/helloserver',
+            type: 'GET',
+            beforeSend: function(request) {
+                request.setRequestHeader("product-key", "dc");
+            },  
+            success: function (result) {
+                $("#servermsg").text(result);
+                // alert(result)
+                
+            }
+        });  
+
+  });
+})
+</script>
+</head>
+
+<body>
+    <button class="lpsmbutton">Send Request to LPSM</button>
+    <button class="dcbutton">Send Request to DC</button>
+    <div class="center-div">
+        <label id="servermsg">
+        <p>This is a paragraph.</p>
+
+    </div>
+<!-- <button onClick="test();" class="lpsmbutton">Send Request to LPSM</button> -->
+    
+</body>
+</html>

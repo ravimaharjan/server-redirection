@@ -1,0 +1,44 @@
+version: '3'
+services:
+
+  dc:
+    build: ./dc
+    # image: "dc"
+    # container_name: "myapp"
+    # image: "appservice_webapp"
+    restart: always
+
+    volumes:
+     - "./dc:/home/support/dc"
+    networks:
+     - webapp_network
+    # depends_on:
+      # - mongo
+  lpsm:
+    build: ./lpsm
+    # image: "lpsm"
+    # container_name: "myapp"
+    # image: "appservice_webapp"
+    restart: always
+
+    volumes:
+     - "./lpsm:/home/support/lpsm"
+    networks:
+     - webapp_network
+
+  nginx:
+    image: "nginx"
+    ports:
+     - "8000:80"
+    volumes:
+     - ./reverse_proxy/:/etc/nginx/conf.d
+    depends_on:
+      - lpsm
+      - dc
+
+    networks:
+     - webapp_network
+networks:
+  webapp_network:
+    driver: "bridge"
+
