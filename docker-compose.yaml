@@ -2,27 +2,33 @@ version: '3'
 services:
 
   dc:
-    build: ./dc
-    # image: "dc"
-    # container_name: "myapp"
-    # image: "appservice_webapp"
+    build:
+      context: ./dc
+      dockerfile: Dockerfile
+    command: npm start
     restart: always
 
-    volumes:
-     - "./dc:/home/support/dc"
+    # volumes:
+    #  - "./dc:/home/support/dc"
+    #  - "./dc/node_modules:/home/support/dc/node_modules"
     networks:
      - webapp_network
-    # depends_on:
-      # - mongo
+
   lpsm:
     build: ./lpsm
-    # image: "lpsm"
-    # container_name: "myapp"
-    # image: "appservice_webapp"
     restart: always
 
     volumes:
      - "./lpsm:/home/support/lpsm"
+    networks:
+     - webapp_network
+
+  jobprocessor:
+    build:
+      context: ./jobprocessor
+      dockerfile: Dockerfile
+    command: npm start
+    restart: always
     networks:
      - webapp_network
 
@@ -35,7 +41,6 @@ services:
     depends_on:
       - lpsm
       - dc
-
     networks:
      - webapp_network
 networks:

@@ -6,16 +6,14 @@ ENV WORKDIR_PATH /home/support
 RUN mkdir -p $WORKDIR_PATH
 # RUN mkdir -p $LOG_PATH
 
-RUN mkdir -p $WORKDIR_PATH/dc
+RUN mkdir -p $WORKDIR_PATH/jobs
 
-COPY package.json $WORKDIR_PATH/dc/
+COPY package.json $WORKDIR_PATH/jobs/
 
-
-
-WORKDIR $WORKDIR_PATH/dc
+WORKDIR $WORKDIR_PATH/jobs
 RUN npm install
-COPY . $WORKDIR_PATH/dc/
+COPY . $WORKDIR_PATH/jobs/
 
-EXPOSE 3000
+EXPOSE 3002
 
 # CMD ["npm", "start"]

@@ -1,0 +1,15 @@
+{
+  "name": "jobprocessor",
+  "version": "1.0.0",
+  "description": "A mock job processor with socket.io",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "ravi maharjan",
+  "license": "ISC",
+  "dependencies": {
+    "socket.io": "^2.3.0"
+  }
+}

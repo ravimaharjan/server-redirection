@@ -1,90 +1,88 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script type="css/stylesheet" >
-    body
-    {
-        background-color: #fcfcfc;
-    }
-    .center-div
-    {
-        position: absolute;
-        margin: auto;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        width: 100px;
-        height: 100px;
-        background-color: #ccc;
-        border-radius: 3px;
-    }
-</script>
-<script>
+    <script src="https://cdn.jsdelivr.net/npm/socket.io-client@2.3.0/dist/socket.io.slim.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <style type="css/stylesheet">
+        body {background-color: powderblue;}
+        ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            background-color: #f1f1f1;
+        }
 
+</style>
+    <script>
 
-// function test() {
-//         var xhr = new XMLHttpRequest();
-//         xhr.open('GET', "http://localhost:8000/helloserver", true);
-//         xhr.setRequestHeader("product-key", "dc");
-//         xhr.responseType = "blob";
-//         xhr.onreadystatechange = function() {
-//             if (xhr.readyState == 4) {
-//                 if (success) success(xhr.response);
-//             }
-//         };
-//         xhr.send(null);
-//     }
+        $(document).ready(function () {
+            $(".lpsmbutton").click(function () {
+                $.ajax({
+                    url: 'http://localhost:8000/helloserver',
+                    type: 'GET',
+                    beforeSend: function (xhr) { xhr.setRequestHeader('X-Test-Header', 'test-value'); },
+                    beforeSend: function (request) {
+                        request.setRequestHeader('product-key', 'lpsm');
+                    },
+                    success: function (result) {
+                        $("#servermsg").text(result);
+                    }
+                });
+            });
+        })
 
-$(document).ready(function(){
-  $(".lpsmbutton").click(function(){
-    $.ajax({
-            url: 'http://localhost:8000/helloserver',
-            type: 'GET',
-            beforeSend: function(xhr){xhr.setRequestHeader('X-Test-Header', 'test-value');},
-            beforeSend: function(request) {
-                request.setRequestHeader('product-key', 'lpsm');
-            },  
-            success: function (result) {
-                $("#servermsg").text(result);
-                // alert(result)
-                
-            }
-        });  
+        $(document).ready(function () {
+            $(".dcbutton").click(function () {
+                $.ajax({
+                    url: 'http://localhost:8000/helloserver',
+                    type: 'GET',
+                    beforeSend: function (request) {
+                        request.setRequestHeader("product-key", "dc");
+                    },
+                    success: function (result) {
+                        $("#servermsg").text(result);
+                    }
+                });
+            });
+        })
 
-  });
-})
-
-$(document).ready(function(){
-  $(".dcbutton").click(function(){
-    $.ajax({
-            url: 'http://localhost:8000/helloserver',
-            type: 'GET',
-            beforeSend: function(request) {
-                request.setRequestHeader("product-key", "dc");
-            },  
-            success: function (result) {
-                $("#servermsg").text(result);
-                // alert(result)
-                
-            }
-        });  
-
-  });
-})
-</script>
+        $(document).ready(function () {
+            console.log('initializing socket')
+            var socket = io();
+            $(".job_button").click(function () {
+                socket.emit('new_job', $("#jobInput").val());
+                return false;
+            });
+            socket.on('job_complete', function (jobId) {
+                console.log(jobId + "is complete")
+                $("#completedjobs").append($(`<li><span>Job ${jobId} is complete.</span></li>`))
+            })
+        })
+    </script>
 </head>
 
 <body>
-    <button class="lpsmbutton">Send Request to LPSM</button>
-    <button class="dcbutton">Send Request to DC</button>
+    <div>
+        <h3>Click the button to send request to LPSM or DC</h3>
+        <button class="lpsmbutton">Send Request to LPSM</button>
+        <button class="dcbutton">Send Request to DC</button>
+       
+    </div>
     <div class="center-div">
         <label id="servermsg">
-        <p>This is a paragraph.</p>
+            <!-- <p>This is a paragraph.</p> -->
+    </div>
+    <div style="position:absolute; top: 200px">
+        <label>Job title</label>
+        <input id="jobInput"> </input>
+        <button class="job_button">Submit a Job</button>
+        <h3>Completed Jobs</h3>
+        <ul id="completedjobs"></ul>
+    </div>
+    <div>
 
     </div>
-<!-- <button onClick="test();" class="lpsmbutton">Send Request to LPSM</button> -->
-    
 </body>
+
 </html>
